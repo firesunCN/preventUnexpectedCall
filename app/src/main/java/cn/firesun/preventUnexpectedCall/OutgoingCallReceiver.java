@@ -12,8 +12,19 @@ public class OutgoingCallReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent serviceIntent = new Intent(context, SensorService.class);
-        context.startService(serviceIntent);
+
+        NoAccidentApplication application = (NoAccidentApplication) context.getApplicationContext();
+        if (!application.getIsChecked()) {
+            String phoneNumber = getResultData();
+            Intent serviceIntent = new Intent(context, SensorService.class);
+            serviceIntent.putExtra("phone", phoneNumber);
+            context.startService(serviceIntent);
+            setResultData(null);
+            abortBroadcast();
+        } else {
+            application.setIsChecked(false);
+        }
+
     }
 
 }

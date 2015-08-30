@@ -6,12 +6,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-
-import com.android.internal.telephony.ITelephony;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by Firesun
@@ -21,7 +18,6 @@ public class SensorService extends Service {
     private SensorManager sensorManager;
     private Sensor sensor;
     private SensorListener sl;
-    private ITelephony iTelephony;
     private Runnable checkRunnable;
 
     @Override
@@ -30,48 +26,46 @@ public class SensorService extends Service {
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    public int onStartCommand(final Intent intent, int flags, int startId) {
+        final NoAccidentApplication application = (NoAccidentApplication) this.getApplicationContext();
 
-        try {
-            Method method = Class.forName("android.os.ServiceManager")
-                    .getMethod("getService", String.class);
-            IBinder binder = (IBinder) method.invoke(null,
-                    new Object[]{TELEPHONY_SERVICE});
-            iTelephony = ITelephony.Stub.asInterface(binder);
-        } catch (Exception e) {
-        }
+        if (!application.getIsChecked()) {
 
-        checkRunnable = new Runnable() {
-            public void run() {
-                float distance = sl.getDistance();
-                if (distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange()) {
-                    try {
-                        iTelephony.endCall();
-                        Thread.sleep(50);
-                        iTelephony.endCall();
-                    } catch (Exception e) {
+
+            checkRunnable = new Runnable() {
+                public void run() {
+                    float distance = sl.getDistance();
+                    if (distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange()) {
+                        application.setIsChecked(false);
+                    } else {
+                        Uri uri = Uri.parse("tel:" + intent.getStringExtra("phone"));
+                        Intent callIntent = new Intent(Intent.ACTION_CALL, uri);
+                        callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(callIntent);
+                        application.setIsChecked(true);
                     }
-                }
 
+                    sensorManager.unregisterListener(sl);
+                    stopSelf();
+                }
+            };
+
+            sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+            sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+            if (sensor != null) {
+                sl = new SensorListener();
+                sensorManager.registerListener(sl, sensor, sensorManager.SENSOR_DELAY_FASTEST);
+                Handler handler = new Handler();
+                handler.postDelayed(checkRunnable, 20);
+            } else {
                 sensorManager.unregisterListener(sl);
-                sl = null;
                 stopSelf();
             }
-        };
 
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        if (sensor != null) {
-            sl = new SensorListener();
-            sensorManager.registerListener(sl, sensor, sensorManager.SENSOR_DELAY_FASTEST);
-            Handler handler = new Handler();
-            handler.postDelayed(checkRunnable, 20);
-        } else {
-            sensorManager.unregisterListener(sl);
-            sl = null;
-            stopSelf();
+
         }
+
+        return START_NOT_STICKY;
     }
 
     private class SensorListener implements SensorEventListener {
