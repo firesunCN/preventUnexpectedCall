@@ -1,19 +1,32 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        firesun {
+            keyAlias 'firesun-android'
+            keyPassword 'firesun'
+            storeFile file('F:/android/release.keystore')
+            storePassword 'firesun'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.0"
     defaultConfig {
         applicationId 'cn.firesun.preventUnexpectedCall'
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        signingConfig signingConfigs.firesun
     }
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.firesun
+        }
+        debug {
+            signingConfig signingConfigs.firesun
         }
     }
     productFlavors {
