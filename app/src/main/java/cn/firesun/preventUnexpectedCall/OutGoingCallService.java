@@ -124,14 +124,16 @@ public class OutGoingCallService extends Service {
                         if (distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange()) {
                             try {
                                 //try to endCall four time
-                                if (!iTelephony.endCall())
+                                if (!iTelephony.endCall()) {
                                     Thread.sleep(50);
-                                if (!iTelephony.endCall())
-                                    Thread.sleep(50);
-                                if (!iTelephony.endCall())
-                                    Thread.sleep(50);
-                                if (!iTelephony.endCall())
-                                    Thread.sleep(50);
+                                    if (!iTelephony.endCall()) {
+                                        Thread.sleep(50);
+                                        if (!iTelephony.endCall()) {
+                                            Thread.sleep(50);
+                                            iTelephony.endCall();
+                                        }
+                                    }
+                                }
                                 notifyUser(intent.getStringExtra("phone"));
                             } catch (Exception e) {
                             }

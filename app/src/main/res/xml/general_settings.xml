@@ -11,8 +11,7 @@
             android:title="@string/enable_outgoing_checkbox_title"
             android:summary="@string/enable_outgoing_checkbox_summary"
             android:defaultValue="true" />
-        <!-- NOTE: EditTextPreference accepts EditText attributes. -->
-        <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+
         <EditTextPreference
             android:key="delay_text"
             android:title="@string/delay_title"
@@ -25,10 +24,6 @@
 
 
     <PreferenceCategory android:title="@string/incoming_setting" >
-        <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
-               dismiss it. -->
-        <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
-
         <ListPreference
             android:dependency="enable_incoming_checkbox"
             android:key="incoming_prevent_method_list"
@@ -85,8 +80,6 @@
         </PreferenceScreen>
     </PreferenceScreen>
     </PreferenceCategory>
-
-
 
 
 </PreferenceScreen>
