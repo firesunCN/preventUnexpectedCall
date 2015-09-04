@@ -59,9 +59,9 @@ public class OutGoingCallService extends Service {
     private void notifyUser(String phoneNumber) {
         if (isNotify) {
             NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            Notification.Builder builder = new Notification.Builder(getApplicationContext()).setTicker("显示于屏幕顶端状态栏的文本")
+            Notification.Builder builder = new Notification.Builder(getApplicationContext())
                     .setSmallIcon(R.mipmap.ic_launcher);
-            Notification note = builder.setAutoCancel(true).setContentTitle("拦截误拨").setContentText(phoneNumber).build();
+            Notification note = builder.setAutoCancel(true).setContentTitle(getString(R.string.notification_title)).setContentText(phoneNumber).build();
             nm.notify(1, note);
         }
 
