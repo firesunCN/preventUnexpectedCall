@@ -56,7 +56,7 @@
     <string name="help_title">设置说明</string>
     <string name="help_summary">检测延迟（毫秒）:请根据本机情况合理设置，过小会导致无法正确拦截，过大会导致拨号延迟，建议设置范围10-100毫秒，可以通过遮蔽距离传感器模拟在口袋中的环境测试出一个合适的值\n来电阻止方式：体验优先为先检测，检测到在口袋中时加锁防误操作；安全优先为先加锁，检测到不在口袋中时解锁\n去电阻止方式：阻止拨出为每次拨号时先检测，检测到不在口袋里才允许拨出；挂断误拨为每次拨号直接拨出，再检测是否在口袋，如果在口袋则挂断</string>
 
-    <string name="about_us_title">告别意外通话 v1.2</string>
+    <string name="about_us_title">告别意外通话 v1.3</string>
     <string name="about_us_summary">Copyright © 2015 - 火日攻天\n意见建议、bug反馈：firesun.cn@gmail.com\n源码地址：https://github.com/firesunCN/preventUnexpectedCall</string>
 
 

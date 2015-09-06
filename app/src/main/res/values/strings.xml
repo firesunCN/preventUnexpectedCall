@@ -56,7 +56,7 @@
     <string name="help_title">Instructions</string>
     <string name="help_summary">Detect delay: If the value is too small, it will be unable to intercept accidental calls. If too big, it will cause dial delay. You can mas the P-Sensor to simulate the pocket environment.\nIncoming Abort Method: "User experience First" means detecting firstly then locking the screen. "Safety First" is on the contrary.\nOutgoing Abort Method: "Prevent Mode" means detecting firstly then calling. "Endcall Mode" means calling firstly then hanging up the accidental calls.</string>
 
-    <string name="about_us_title">No Accidental Call v1.2</string>
+    <string name="about_us_title">No Accidental Call v1.3</string>
     <string name="about_us_summary">Copyright © 2015 - Firesun\nFeedback: firesun.cn@gmail.com\nSource: https://github.com/firesunCN/preventUnexpectedCall</string>
 
 

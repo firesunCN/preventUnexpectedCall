@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">告別意外通話</string>
+    <string name="notification_title">攔截誤撥</string>
+
+    <string name="general_setting">功能</string>
+    <string name="enable_incoming_checkbox_title">來電</string>
+    <string name="enable_incoming_checkbox_summary">防止手機在口袋裡誤接/掛電話</string>
+
+    <string name="enable_outgoing_checkbox_title">去電</string>
+    <string name="enable_outgoing_checkbox_summary">防止手機在口袋裡誤撥電話</string>
+
+    <string name="incoming_setting">來電</string>
+    <string name="outgoing_setting">去電</string>
+
+    <string name="delay_title">檢測延遲（毫秒）</string>
+
+
+    <string name="delay_default_value">20</string>
+
+
+    <string name="incoming_prevent_method_title">阻止方式</string>
+    <string-array name="incoming_prevent_method_entries">
+        <item>體驗優先</item>
+        <item>安全優先</item>
+    </string-array>
+    <string-array name="incoming_prevent_method_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <string name="outgoing_prevent_method_title">阻止方式</string>
+
+    <string-array name="outgoing_prevent_method_entries">
+        <item>阻止撥出</item>
+        <item>掛斷誤撥</item>
+    </string-array>
+    <string-array name="outgoing_prevent_method_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+
+    <string name="enable_notification_checkbox_title">通知</string>
+    <string name="enable_notification_checkbox_summaryOn">在工作列顯示攔截誤撥的通知</string>
+    <string name="enable_notification_checkbox_summaryOff">不顯示攔截通知</string>
+
+
+    <string name="about_setting">關於</string>
+    <string name="about_title">幫助</string>
+    <string name="about_summary">Copyright © 2015 - 火日攻天\n意見建議、bug回饋：firesun.cn@gmail.com\nGithub:https://github.com/firesunCN</string>
+
+    <string name="about_soft_title">軟體介紹</string>
+    <string name="about_soft_summary">本軟體通過距離感測器識別手機是否在口袋中，並阻止因為未鎖屏導致的誤撥電話，或者誤接/掛電話。</string>
+
+    <string name="help_title">設置說明</string>
+    <string name="help_summary">檢測延遲（毫秒）:請根據本機情況合理設置，過小會導致無法正確攔截，過大會導致撥號延遲，建議設置範圍10-100毫秒，可以通過遮蔽距離感測器模擬在口袋中的環境測試出一個合適的值\n來電阻止方式：體驗優先為先檢測，檢測到在口袋中時加鎖防誤操作；安全優先為先加鎖，檢測到不在口袋中時解鎖\n去電阻止方式：阻止撥出為每次撥號時先檢測，檢測到不在口袋裡才允許撥出；掛斷誤撥為每次撥號直接撥出，再檢測是否在口袋，如果在口袋則掛斷</string>
+
+    <string name="about_us_title">告別意外通話 v1.3</string>
+    <string name="about_us_summary">Copyright © 2015 - 火日攻天\n意見建議、bug回饋：firesun.cn@gmail.com\n源碼地址：https://github.com/firesunCN/preventUnexpectedCall</string>
+
+
+</resources>

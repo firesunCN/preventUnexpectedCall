@@ -52,9 +52,10 @@ public class InComingCallService extends Service {
     private void showLockScreen() {
         wmParams = new WindowManager.LayoutParams();
         mWindowManager = (WindowManager) getApplication().getSystemService(getApplication().WINDOW_SERVICE);
-        wmParams.type = LayoutParams.TYPE_PHONE;
+        wmParams.type = LayoutParams.TYPE_SYSTEM_ERROR;
         wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.LEFT | Gravity.TOP;
+        wmParams.flags|=LayoutParams.FLAG_LAYOUT_NO_LIMITS;
         wmParams.x = 0;
         wmParams.y = 0;
         wmParams.width = WindowManager.LayoutParams.MATCH_PARENT;
