@@ -7,13 +7,13 @@ import android.app.Application;
  * Email:firesun.cn@gmail.com
  */
 public class NoAccidentApplication extends Application {
-    private boolean isChecked = false;
+    private boolean hasCheckedThisCall = false;
 
-    public boolean getIsChecked() {
-        return isChecked;
+    public boolean getHasCheckedThisCall() {
+        return hasCheckedThisCall;
     }
 
-    public void setIsChecked(boolean isChecked) {
-        this.isChecked = isChecked;
+    public void setHasCheckedThisCall(boolean isChecked) {
+        this.hasCheckedThisCall = isChecked;
     }
 }

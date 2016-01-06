@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.RelativeLayout;
 
-
 /**
  * Created by Firesun
  * Email:firesun.cn@gmail.com
@@ -28,20 +27,33 @@ public class InComingCallService extends Service {
     WindowManager mWindowManager;
     private SensorManager sensorManager;
     private Sensor sensor;
-    private SensorListener sl;
-    private Runnable checkRunnable;
+    private SensorListener sensorListener;
+    private Runnable checkDistanceRunnable;
+    private Runnable stopServiceAfterOneMinuteRunnable;
     private boolean detectEnable = false;
     private int delay;
     private int preventMethod;
+
+    public static final int USER_EXPERIENCE_FIRST=1;
+    public static final int SAFETY_FIRST=2;
 
     @Override
     public void onCreate() {
         super.onCreate();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        delay = Integer.valueOf(sharedPref.getString("delay_text", "20"));
+        delay = Integer.valueOf(sharedPref.getString("delay_text", "40"));
         preventMethod = Integer.valueOf(sharedPref.getString("incoming_prevent_method_list", "1"));
 
         createFloatView();
+
+        /*
+         * I add these codes below to make sure that the lock screen would disappear even in poor condition.
+         * I had registered the receiver to monitor the call hang up message but the receiver in android is not reliable.
+         * The hang up message may be lost and in this case the lock screen would not disappear if I didn't add these codes.
+         */
+        stopServiceAfterOneMinuteRunnable= new Runnable() {public void run() {stopSelf();}};
+        Handler handler = new Handler();
+        handler.postDelayed(stopServiceAfterOneMinuteRunnable, 60*1000);
     }
 
     @Override
@@ -66,15 +78,14 @@ public class InComingCallService extends Service {
         mWindowManager.addView(mRelativeLayout, wmParams);
     }
 
-
     private void createFloatView() {
 
         switch (preventMethod) {
-            case 1:
-                checkRunnable = new Runnable() {
+            case USER_EXPERIENCE_FIRST:
+                checkDistanceRunnable = new Runnable() {
                     public void run() {
                         detectEnable = true;
-                        float distance = sl.getDistance();
+                        float distance = sensorListener.getDistance();
                         if (distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange()) {
                             showLockScreen();
                         } else {
@@ -86,21 +97,21 @@ public class InComingCallService extends Service {
                 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
                 sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
                 if (sensor != null) {
-                    sl = new SensorListener();
-                    sensorManager.registerListener(sl, sensor, sensorManager.SENSOR_DELAY_NORMAL);
+                    sensorListener = new SensorListener();
+                    sensorManager.registerListener(sensorListener, sensor, sensorManager.SENSOR_DELAY_NORMAL);
                     Handler handler = new Handler();
-                    handler.postDelayed(checkRunnable, delay);
+                    handler.postDelayed(checkDistanceRunnable, delay);
                 } else {
                     stopSelf();
                 }
                 break;
 
-            case 2:
+            case SAFETY_FIRST:
                 showLockScreen();
-                checkRunnable = new Runnable() {
+                checkDistanceRunnable = new Runnable() {
                     public void run() {
                         detectEnable = true;
-                        float distance = sl.getDistance();
+                        float distance = sensorListener.getDistance();
                         if (!(distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange())) {
                             stopSelf();
                         }
@@ -110,24 +121,22 @@ public class InComingCallService extends Service {
                 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
                 sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
                 if (sensor != null) {
-                    sl = new SensorListener();
-                    sensorManager.registerListener(sl, sensor, sensorManager.SENSOR_DELAY_NORMAL);
+                    sensorListener = new SensorListener();
+                    sensorManager.registerListener(sensorListener, sensor, sensorManager.SENSOR_DELAY_NORMAL);
                     Handler handler = new Handler();
-                    handler.postDelayed(checkRunnable, delay);
+                    handler.postDelayed(checkDistanceRunnable, delay);
                 } else {
                     stopSelf();
                 }
                 break;
         }
-
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (sl != null) {
-            sensorManager.unregisterListener(sl);
+        if (sensorListener != null) {
+            sensorManager.unregisterListener(sensorListener);
         }
 
         if (mRelativeLayout != null) {
@@ -135,7 +144,6 @@ public class InComingCallService extends Service {
         }
         detectEnable = false;
     }
-
 
     private class SensorListener implements SensorEventListener {
         private float distance = -1;
@@ -149,7 +157,6 @@ public class InComingCallService extends Service {
         }
 
         public void onSensorChanged(SensorEvent event) {
-
             float distance = event.values[0];
             setDistance(distance);
             if (detectEnable) {

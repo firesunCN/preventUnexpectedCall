@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 
-
 /**
  * Created by Firesun
  * Email:firesun.cn@gmail.com
@@ -30,20 +29,21 @@ public class CallReceiver extends BroadcastReceiver {
         if (intent.getAction().equals(Intent.ACTION_NEW_OUTGOING_CALL)) {
             if (sharedPref.getBoolean("enable_outgoing_checkbox", true)) {
                 switch (Integer.valueOf(sharedPref.getString("outgoing_prevent_method_list", "1"))) {
-                    case 1:
+                    case OutGoingCallService.PREVENT_MODE:
                         NoAccidentApplication application = (NoAccidentApplication) context.getApplicationContext();
-                        if (!application.getIsChecked()) {
+                        if (!application.getHasCheckedThisCall()) {
                             String phoneNumber = getResultData();
                             Intent serviceIntent = new Intent(context, OutGoingCallService.class);
                             serviceIntent.putExtra("phone", phoneNumber);
                             context.startService(serviceIntent);
                             setResultData(null);
                             abortBroadcast();
-                        } else {
-                            application.setIsChecked(false);
+                        }
+                        else {
+                            application.setHasCheckedThisCall(false);
                         }
                         break;
-                    case 2:
+                    case OutGoingCallService.ENDCALL_MODE:
                         Intent serviceIntent = new Intent(context, OutGoingCallService.class);
                         serviceIntent.putExtra("phone", getResultData());
                         context.startService(serviceIntent);

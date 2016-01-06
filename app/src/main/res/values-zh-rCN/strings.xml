@@ -2,6 +2,9 @@
     <string name="app_name">告别意外通话</string>
     <string name="notification_title">拦截误拨</string>
 
+    <string name="no_call_privilege">错误: 请授予拦截误拨程序拨号的权限！</string>
+
+
     <string name="general_setting">功能</string>
     <string name="enable_incoming_checkbox_title">来电</string>
     <string name="enable_incoming_checkbox_summary">防止手机在口袋里误接/挂电话</string>
@@ -13,10 +16,6 @@
     <string name="outgoing_setting">去电</string>
 
     <string name="delay_title">检测延迟（毫秒）</string>
-
-
-    <string name="delay_default_value">20</string>
-
 
     <string name="incoming_prevent_method_title">阻止方式</string>
     <string-array name="incoming_prevent_method_entries">
@@ -56,7 +55,7 @@
     <string name="help_title">设置说明</string>
     <string name="help_summary">检测延迟（毫秒）:请根据本机情况合理设置，过小会导致无法正确拦截，过大会导致拨号延迟，建议设置范围10-100毫秒，可以通过遮蔽距离传感器模拟在口袋中的环境测试出一个合适的值\n来电阻止方式：体验优先为先检测，检测到在口袋中时加锁防误操作；安全优先为先加锁，检测到不在口袋中时解锁\n去电阻止方式：阻止拨出为每次拨号时先检测，检测到不在口袋里才允许拨出；挂断误拨为每次拨号直接拨出，再检测是否在口袋，如果在口袋则挂断</string>
 
-    <string name="about_us_title">告别意外通话 v1.3</string>
+    <string name="about_us_title">告别意外通话 v1.5</string>
     <string name="about_us_summary">Copyright © 2015 - 火日攻天\n意见建议、bug反馈：firesun.cn@gmail.com\n源码地址：https://github.com/firesunCN/preventUnexpectedCall</string>
 
 

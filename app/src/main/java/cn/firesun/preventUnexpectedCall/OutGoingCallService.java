@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.android.internal.telephony.ITelephony;
 
@@ -25,13 +26,15 @@ import java.lang.reflect.Method;
 public class OutGoingCallService extends Service {
     private SensorManager sensorManager;
     private Sensor sensor;
-    private SensorListener sl;
+    private SensorListener sensorListener;
     private Runnable checkRunnable;
     private int delay;
     private boolean isNotify;
     private int preventMethod;
-
     private ITelephony iTelephony;
+
+    public static final int PREVENT_MODE=1;
+    public static final int ENDCALL_MODE=2;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -43,18 +46,16 @@ public class OutGoingCallService extends Service {
         super.onCreate();
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        delay = Integer.valueOf(sharedPref.getString("delay_text", "20"));
+        delay = Integer.valueOf(sharedPref.getString("delay_text", "40"));
         isNotify = sharedPref.getBoolean("enable_notification_checkbox", true);
         preventMethod = Integer.valueOf(sharedPref.getString("outgoing_prevent_method_list", "1"));
-
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sensorManager.unregisterListener(sl);
+        sensorManager.unregisterListener(sensorListener);
     }
-
 
     private void notifyUser(String phoneNumber) {
         if (isNotify) {
@@ -64,7 +65,6 @@ public class OutGoingCallService extends Service {
             Notification note = builder.setAutoCancel(true).setContentTitle(getString(R.string.notification_title)).setContentText(phoneNumber).build();
             nm.notify(1, note);
         }
-
     }
 
     @Override
@@ -72,22 +72,31 @@ public class OutGoingCallService extends Service {
 
         switch (preventMethod) {
             //method 1
-            case 1:
+            case PREVENT_MODE:
                 final NoAccidentApplication application = (NoAccidentApplication) this.getApplicationContext();
 
-                if (!application.getIsChecked()) {
+                if (!application.getHasCheckedThisCall()) {
+
                     checkRunnable = new Runnable() {
                         public void run() {
-                            float distance = sl.getDistance();
+                            float distance = sensorListener.getDistance();
                             if (distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange()) {
-                                application.setIsChecked(false);
+                                application.setHasCheckedThisCall(false);
                                 notifyUser(intent.getStringExtra("phone"));
                             } else {
+                                application.setHasCheckedThisCall(true);
+
                                 Uri uri = Uri.parse("tel:" + intent.getStringExtra("phone"));
                                 Intent callIntent = new Intent(Intent.ACTION_CALL, uri);
                                 callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(callIntent);
-                                application.setIsChecked(true);
+                                try{
+                                    startActivity(callIntent);
+                                }
+                                catch (SecurityException e)
+                                {
+                                    Toast.makeText(getApplicationContext(), R.string.no_call_privilege,
+                                            Toast.LENGTH_LONG).show();
+                                }
                             }
                             stopSelf();
                         }
@@ -96,8 +105,8 @@ public class OutGoingCallService extends Service {
                     sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
                     sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
                     if (sensor != null) {
-                        sl = new SensorListener();
-                        sensorManager.registerListener(sl, sensor, sensorManager.SENSOR_DELAY_FASTEST);
+                        sensorListener = new SensorListener();
+                        sensorManager.registerListener(sensorListener, sensor, sensorManager.SENSOR_DELAY_FASTEST);
                         Handler handler = new Handler();
                         handler.postDelayed(checkRunnable, delay);
                     } else {
@@ -107,8 +116,7 @@ public class OutGoingCallService extends Service {
                 }
                 break;
 
-            case 2:
-
+            case ENDCALL_MODE:
                 try {
                     Method method = Class.forName("android.os.ServiceManager")
                             .getMethod("getService", String.class);
@@ -120,7 +128,7 @@ public class OutGoingCallService extends Service {
 
                 checkRunnable = new Runnable() {
                     public void run() {
-                        float distance = sl.getDistance();
+                        float distance = sensorListener.getDistance();
                         if (distance >= 0.0 && distance < 5.0f && distance < sensor.getMaximumRange()) {
                             try {
                                 //try to endCall
@@ -133,7 +141,6 @@ public class OutGoingCallService extends Service {
                             } catch (Exception e) {
                             }
                         }
-
                         stopSelf();
                     }
                 };
@@ -141,18 +148,17 @@ public class OutGoingCallService extends Service {
                 sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
                 sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
                 if (sensor != null) {
-                    sl = new SensorListener();
-                    sensorManager.registerListener(sl, sensor, sensorManager.SENSOR_DELAY_FASTEST);
+                    sensorListener = new SensorListener();
+                    sensorManager.registerListener(sensorListener, sensor, sensorManager.SENSOR_DELAY_FASTEST);
                     Handler handler = new Handler();
                     handler.postDelayed(checkRunnable, delay);
-                } else {
-
+                }
+                else {
                     stopSelf();
                 }
 
                 break;
         }
-
 
         return START_NOT_STICKY;
     }

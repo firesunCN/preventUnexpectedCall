@@ -2,6 +2,9 @@
     <string name="app_name">No Accidental Call</string>
     <string name="notification_title">Intercept Accidental Call</string>
 
+
+    <string name="no_call_privilege">Error: No Accidental Call couldn\'t work without \"CALL_PHONE permission!\"</string>
+
     <string name="general_setting">General</string>
     <string name="enable_incoming_checkbox_title">Incoming Call</string>
     <string name="enable_incoming_checkbox_summary">Prevent answering/hanging up the phone by accident when the phone is in the pocket</string>
@@ -15,7 +18,7 @@
     <string name="delay_title">Detect delay (Millisecond)</string>
 
 
-    <string name="delay_default_value">20</string>
+    <string name="delay_default_value" translatable="false">40</string>
 
 
     <string name="incoming_prevent_method_title">Abort Method</string>
@@ -56,8 +59,7 @@
     <string name="help_title">Instructions</string>
     <string name="help_summary">Detect delay: If the value is too small, it will be unable to intercept accidental calls. If too big, it will cause dial delay. You can mas the P-Sensor to simulate the pocket environment.\nIncoming Abort Method: "User experience First" means detecting firstly then locking the screen. "Safety First" is on the contrary.\nOutgoing Abort Method: "Prevent Mode" means detecting firstly then calling. "Endcall Mode" means calling firstly then hanging up the accidental calls.</string>
 
-    <string name="about_us_title">No Accidental Call v1.3</string>
+    <string name="about_us_title">No Accidental Call v1.5</string>
     <string name="about_us_summary">Copyright © 2015 - Firesun\nFeedback: firesun.cn@gmail.com\nSource: https://github.com/firesunCN/preventUnexpectedCall</string>
-
 
 </resources>

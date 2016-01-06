@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">告別意外通話</string>
     <string name="notification_title">攔截誤撥</string>
+    <string name="no_call_privilege">錯誤: 請授予攔截誤撥程序撥號的權限！</string>
 
     <string name="general_setting">功能</string>
     <string name="enable_incoming_checkbox_title">來電</string>
@@ -13,11 +14,6 @@
     <string name="outgoing_setting">去電</string>
 
     <string name="delay_title">檢測延遲（毫秒）</string>
-
-
-    <string name="delay_default_value">20</string>
-
-
     <string name="incoming_prevent_method_title">阻止方式</string>
     <string-array name="incoming_prevent_method_entries">
         <item>體驗優先</item>
@@ -56,7 +52,7 @@
     <string name="help_title">設置說明</string>
     <string name="help_summary">檢測延遲（毫秒）:請根據本機情況合理設置，過小會導致無法正確攔截，過大會導致撥號延遲，建議設置範圍10-100毫秒，可以通過遮蔽距離感測器模擬在口袋中的環境測試出一個合適的值\n來電阻止方式：體驗優先為先檢測，檢測到在口袋中時加鎖防誤操作；安全優先為先加鎖，檢測到不在口袋中時解鎖\n去電阻止方式：阻止撥出為每次撥號時先檢測，檢測到不在口袋裡才允許撥出；掛斷誤撥為每次撥號直接撥出，再檢測是否在口袋，如果在口袋則掛斷</string>
 
-    <string name="about_us_title">告別意外通話 v1.3</string>
+    <string name="about_us_title">告別意外通話 v1.5</string>
     <string name="about_us_summary">Copyright © 2015 - 火日攻天\n意見建議、bug回饋：firesun.cn@gmail.com\n源碼地址：https://github.com/firesunCN/preventUnexpectedCall</string>
 
 

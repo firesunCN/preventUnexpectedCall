@@ -74,6 +74,8 @@
             android:key="about_us_key"
             android:title="@string/about_us_title"
             android:summary="@string/about_us_summary" >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="https://github.com/firesunCN/preventUnexpectedCall" />
         </PreferenceScreen>
     </PreferenceScreen>
     </PreferenceCategory>
